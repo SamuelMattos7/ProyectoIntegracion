@@ -6,15 +6,24 @@ from django.core.validators import MinValueValidator
 class CodigosProductos(models.Model):
 
     TipoProd= [
-        ("A","X"),
-        ("B","Z"),
-        ("C","Y")
+        ("RADIO MOVIL","Movil"),
+        ("RADIO PORTATIL","Portatil"),
+        ("RADIO APX","APX")
     ] 
 
     CodigosProd= [
-        ("A","X"),
-        ("B","Z"),
-        ("C","Y")
+        ("PR7","R7"),
+        ("PR2","R2"),
+        ("PR5","DEP550"),
+        ('PR3', 'EP350'),
+        ('M8e', '8500e'),
+        ('M5e', '5000e'),
+        ('M8', 'DGM8000'),
+        ('M5', 'DEM500'),
+        ('APX0', 'APX'),
+        ('APX2', 'APX'),
+        ('APX1', 'APX'),
+        
     ] 
 
     ProductoCodigo= models.CharField(verbose_name='Codigo de Producto', choices=CodigosProd, max_length=40, unique=True)
