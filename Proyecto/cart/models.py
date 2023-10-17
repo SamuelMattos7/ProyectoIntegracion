@@ -23,11 +23,13 @@ class CartItems(models.Model):
     Item = models.ForeignKey(
         Producto, 
         to_field='ProductID',
-        related_name='Item', 
+        related_name='Items', 
         on_delete= models.CASCADE,
     )
     Cantidad = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
-    def PrecioTotal(self):
+    def PrecioProductos(self):
         return self.Cantidad * self.Item.Precio
+    
+    
 

@@ -2,13 +2,23 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.core.validators import MinValueValidator
-from Core.models import CodigosProductos
 
-TipoProd= [
-    ("A","X"),
-    ("B","Z"),
-    ("C","Y")
-] 
+class CodigosProductos(models.Model):
+
+    TipoProd= [
+        ("A","X"),
+        ("B","Z"),
+        ("C","Y")
+    ] 
+
+    CodigosProd= [
+        ("A","X"),
+        ("B","Z"),
+        ("C","Y")
+    ] 
+
+    ProductoCodigo= models.CharField(verbose_name='Codigo de Producto', choices=CodigosProd, max_length=40, unique=True)
+    TipoProducto = models.CharField(verbose_name='Tipo de Producto', choices=TipoProd, max_length=40, unique=True)
 
 # Create your models here.
 class Producto(models.Model):
@@ -27,7 +37,7 @@ class Producto(models.Model):
     ) 
     Tipo = models.OneToOneField(
         CodigosProductos,
-        to_field='ProductTipo', 
+        to_field='TipoProducto', 
         related_name='CarritoDeUser',
         on_delete=models.CASCADE 
     )
@@ -38,20 +48,3 @@ class Producto(models.Model):
 
     def get_absolute_url(self):
         return reverse('AdminProductList', args=str((self.ProductID)))
-    
-class CodigosProductos(models.Model):
-
-    TipoProd= [
-        ("A","X"),
-        ("B","Z"),
-        ("C","Y")
-    ] 
-
-    CodigosProd= [
-        ("A","X"),
-        ("B","Z"),
-        ("C","Y")
-    ] 
-
-    ProductoCodigo= models.CharField(verbose_name='Codigo de Producto', choices=CodigosProd)
-    TipoProducto = models.CharField(verbose_name='Tipo de Producto', choices=TipoProd)
