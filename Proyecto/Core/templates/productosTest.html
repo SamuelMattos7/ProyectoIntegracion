@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>hola</h2>
+    <a href="{% url 'CrearProduct' %}">Agregar Productos</a>
+    {% for A in Object %} 
+        <li>ID: {{ A.ProductID}}</li>
+        <li>Nombre: {{ A.Nombre }}</li> 
+        <li>Stock: {{ A.Cantidad }}</li> 
+        <li>Tipo: {{ A.Tipo }}</li> 
+        <li>Marca: {{ A.Marca }}</li>
+        <a href="{% url 'ActulizarProduct' A.ProductID %}">Actualizar</a>
+        <a href="{% url 'EliminarProduct' A.ProductID %}">Eliminar</a>
+        <hr>
+    {% endfor %}
+</body>
+</html>
