@@ -25,16 +25,16 @@ def VerProduct(request):
 def CrearProduct(request):
     
     form = ProductCreateForm()
-    
+
     if request.method == 'POST':
-
         form = ProductCreateForm(request.POST)
-
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('AdminProductList'))
         else:
+            print(form.errors)
             form = ProductCreateForm()
+
 
     return render(request, 'CrearProducto.html', {'form':form})
         
@@ -66,3 +66,7 @@ def DeleteProducto(request, id):
         instance.delete()
         return redirect('AdminProductList')
 
+def Tienda(request):
+    productos = Producto.objects.all()
+    context = {'Productos':productos}
+    return render(request, 'Tienda/catalogo.html', context)

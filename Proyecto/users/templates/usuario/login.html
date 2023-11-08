@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a type="button" href="{% url 'logout' %}">logout</a>
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="alert alert-primary" role="alert">
+                <p>Email o contraseña ingresado son incorrectos</p>
+            </div>
+        {% endif %}
+        <label>{{form.username.label}}</label>
+        {{form.username}}
+        <br>
+        <label>{{form.password.label}}</label>
+        {{form.password}}
+        <button type="submit">Siguiente</button>
+    </form>
+</body>
+</html>

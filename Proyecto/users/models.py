@@ -1,6 +1,8 @@
 from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.core.mail import send_mail
+from django.conf import settings
 # Create your models here.
 
 class ManejoDeCuentas(BaseUserManager):
@@ -28,7 +30,7 @@ class ManejoDeCuentas(BaseUserManager):
             raise ValueError('Debe entregar su correo electronico')
         
         email = self.normalize_email(email) # Normaliza el correo el electronico, chequea si se ha formateado correctamente
-        user = self.models(email=email, username=username, **other_fields) # se crea el objeto user, listo para ser guardado a la DB
+        user = self.model(email=email, username=username, **other_fields) # se crea el objeto user, listo para ser guardado a la DB
         user.set_password(password) # determinamos la contraseña del ususario
         user.save() # se guarda la informacion
         # retornamos el usuario
@@ -65,6 +67,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Cuentas"
         verbose_name_plural = "Cuentas"
+
+    def email_user(self, subject, message):
+        send_mail(
+            subject,
+            message,
+            'settings.EMAIL_HOST_USER',
+            [self.email],
+            fail_silently = False
+        )
 
     def __str__(self):
         return self.username

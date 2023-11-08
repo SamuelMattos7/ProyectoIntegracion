@@ -12,7 +12,7 @@ class Pagos(models.Model):
     )
 
     PagoID = models.BigAutoField(primary_key=True, verbose_name='pagoID')
-    Compador = models.ForeignKey(
+    Comprador = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         to_field='UserID', 
         related_name='Pagos_Comprador',

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h4>Registre una nueva cuenta</h4>
+    <hr>
+    <form action="." method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+            <p>Por favor Corrija los siguientes errores: </p>
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ field.label }}: {{field.errors}}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <label for=""></label>
+        {{form.username}}
+        {{form.email}}
+        {{form.password}}
+        {{form.password2}}
+        <button type="submit">Continuar</button>
+    </form>
+</body>
+</html>

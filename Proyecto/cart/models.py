@@ -5,12 +5,29 @@ from Core.models import Producto
     
 class Carrito(models.Model):
     CartID= models.AutoField(primary_key=True, verbose_name='CartID')
-    UserCart= models.OneToOneField(
-        settings.AUTH_USER_MODEL,
+    Fecha_Creado = models.DateTimeField(auto_now_add=True)
+    UserCart= models.ForeignKey( 
+        settings.AUTH_USER_MODEL, 
         to_field='UserID', 
         related_name='CarritoDeUser',
-        on_delete=models.CASCADE 
+        on_delete=models.SET_NULL, 
+        blank=True, 
+        null=True 
     )
+    Completado = models.BooleanField(default=False, null=True, blank=False)
+
+    def __str__(self):
+        return self.UserCart.username
+
+    def PrecioTotal(self):
+        cart_Items = self.Carrito.all()  # Assuming 'Carrito' is the related name for CartItems
+        TotalPrice = sum(item.Total for item in cart_Items)
+        return TotalPrice
+    
+    def CantidadTotal(self):
+        cart_Items = self.Carrito.all()  # Assuming 'Carrito' is the related name for CartItems
+        TotalPrice = sum(item.Cantidad for item in cart_Items)
+        return TotalPrice
 
 class CartItems(models.Model):
     CartItemsID = models.AutoField(primary_key=True, verbose_name='XID')
@@ -27,9 +44,16 @@ class CartItems(models.Model):
         on_delete= models.CASCADE,
     )
     Cantidad = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-
-    def PrecioProductos(self):
-        return self.Cantidad * self.Item.Precio
+    fechaAgregado = models.DateTimeField(default=None)
     
+    def __str__(self):
+        return self.Item.Nombre
+    
+    @property
+    def Total(self):
+        total = self.Item.Precio * self.Cantidad
+        return total
+    
+
     
 

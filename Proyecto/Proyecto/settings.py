@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
 
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     "users",
     "cart",
     "pagos",
+    'crispy_forms',
+    'crispy_bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -124,6 +127,19 @@ STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
+STATICFILES_DIRS = (
+    BASE_DIR / "static",
+)
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'users.Usuario' # se le indica a django donde esta el modelo usuario y que este es el nuevo default
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'reidiosolutions@gmail.com'
+EMAIL_HOST_PASSWORD = 'bhvlvuvfdotmvggc'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+LOGIN_REDIRECT_URL='home'

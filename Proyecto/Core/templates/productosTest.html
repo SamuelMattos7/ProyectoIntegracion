@@ -1,22 +1,45 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <h2>hola</h2>
     <a href="{% url 'CrearProduct' %}">Agregar Productos</a>
-    {% for A in Object %} 
-        <li>ID: {{ A.ProductID}}</li>
-        <li>Nombre: {{ A.Nombre }}</li> 
-        <li>Stock: {{ A.Cantidad }}</li> 
-        <li>Tipo: {{ A.Tipo }}</li> 
-        <li>Marca: {{ A.Marca }}</li>
-        <a href="{% url 'ActulizarProduct' A.ProductID %}">Actualizar</a>
-        <a href="{% url 'EliminarProduct' A.ProductID %}">Eliminar</a>
-        <hr>
-    {% endfor %}
+    <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Stock</th>
+            <th>Codigos</th>
+            <th>Tipo</th>
+            <th>Marca</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for A in Object %}
+            <tr>
+              <td>{{ A.ProductID }}</td>
+              <td>{{ A.Nombre }}</td>
+              <td>{{ A.Cantidad }}</td>
+              <td>{{ A.Codigos_id }}</td>
+              <td>{{ A.Tipo_id }}</td>
+              <td>{{ A.Marca }}</td>
+              <td>{{ A.Precio }}</td>
+              <td>
+                <a href="{% url 'ActulizarProduct' A.ProductID %}">Actualizar</a>
+                <a href="{% url 'EliminarProduct' A.ProductID %}">Eliminar</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
