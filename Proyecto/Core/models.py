@@ -71,22 +71,24 @@ class Producto(models.Model):
     )
     Nombre = models.CharField(verbose_name="Nombre del producto", max_length=60)
     Cantidad = models.SmallIntegerField(verbose_name="Cantidad de producto", validators=[MinValueValidator(1)])
-    Codigos= models.OneToOneField(
+    Codigos= models.ForeignKey(
         CodigosProductos,
         to_field='ProductoCodigo', 
         related_name='ProductCodigo',
         on_delete=models.CASCADE,
     ) 
-    Tipo = models.OneToOneField(
+    Tipo = models.ForeignKey(
         TipoProductos,
         to_field='TipoProducto', 
         related_name='ProductTipo',
         on_delete=models.CASCADE,
     )
     Marca = models.CharField(verbose_name="Marca del producto", max_length=60)
-    Precio = models.IntegerField(verbose_name='Precio', null=False)
+    Imagen = models.ImageField(null=True, blank=True, upload_to="imagenes/")
+    Precio = models.FloatField(verbose_name='Precio', null=False)
     Creado_el = models.DateTimeField(verbose_name='Fecha de creacion', auto_now_add=True)
     Modificado_el = models.DateTimeField(verbose_name='Fecha de Modificacion', auto_now_add=True)
+
 
     def get_absolute_url(self):
         return reverse('AdminProductList', args=str((self.ProductID)))

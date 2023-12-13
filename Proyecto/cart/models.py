@@ -16,16 +16,13 @@ class Carrito(models.Model):
     )
     Completado = models.BooleanField(default=False, null=True, blank=False)
 
-    def __str__(self):
-        return self.UserCart.username
-
     def PrecioTotal(self):
-        cart_Items = self.Carrito.all()  # Assuming 'Carrito' is the related name for CartItems
+        cart_Items = self.Carrito.all()  
         TotalPrice = sum(item.Total for item in cart_Items)
         return TotalPrice
     
     def CantidadTotal(self):
-        cart_Items = self.Carrito.all()  # Assuming 'Carrito' is the related name for CartItems
+        cart_Items = self.Carrito.all()  
         TotalPrice = sum(item.Cantidad for item in cart_Items)
         return TotalPrice
 
@@ -43,8 +40,8 @@ class CartItems(models.Model):
         related_name='Items', 
         on_delete= models.CASCADE,
     )
-    Cantidad = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    fechaAgregado = models.DateTimeField(default=None)
+    Cantidad = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
+    fechaAgregado = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.Item.Nombre

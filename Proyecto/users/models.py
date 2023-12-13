@@ -49,7 +49,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='Email', max_length=60, unique=True)
     username = models.CharField(verbose_name='username', max_length=30, unique=True)
     userType = models.CharField(verbose_name='Tipo de usuario', max_length=25, choices=ROL, default='CLIENTE')
-    afiliacion = models.CharField(verbose_name='afiliacion', max_length=60, unique=False)
     
     #Estado del usuario
     is_active= models.BooleanField(default=False)
@@ -79,3 +78,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+class Perfil(models.Model):
+    PerfilID = models.AutoField(primary_key=True, verbose_name='PerfilID')
+    User = models.OneToOneField(settings.AUTH_USER_MODEL, to_field='UserID', on_delete=models.CASCADE)
+    Nombre = models.CharField(verbose_name="Nombre cliente", max_length=30)
+    Apellido = models.CharField(verbose_name="Apellido cliente", max_length=30)
+    afiliacion = models.CharField(verbose_name='Afiliacion', max_length=60, unique=False)
+    Telefono = models.CharField(verbose_name="Telefono cliente", max_length=30)
+    Direccion = models.CharField(verbose_name="Direccion cliente", max_length=30)

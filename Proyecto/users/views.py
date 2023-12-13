@@ -1,14 +1,17 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.encoding import force_bytes
 from django.utils.encoding import force_str
 from .hash import Hash_Activacion_Cuenta
-from users.form import RegistroUsuario
-from .models import Usuario
+from users.form import RegistroUsuario, UserUpdateForm, PerfilCreacionForm, PerfilEditarForm
+from .models import Usuario, Perfil
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from orders.models import Orders
 # Create your views here.
 
 @login_required
@@ -22,16 +25,15 @@ def Registro(request):
 
     if request.user.is_authenticated:
         return redirect('users')
-    
-    # Check de que el metodo de requerido sea POST y si lo es inicializa el formulario 
+     
     if request.method == 'POST':
 
         form = RegistroUsuario(request.POST) 
         if form.is_valid():
-            user = form.save(commit=False) # no se guarda al usuario de immediato 
-            user.email = form.cleaned_data['email'] # se validida y limpia la informacion
+            user = form.save(commit=False)
+            user.email = form.cleaned_data['email'] 
             user.set_password(form.cleaned_data['password'])
-            user.is_active = False # no se activa al usuario de immediato
+            user.is_active = False 
             user.save()
 
             current_site = get_current_site(request)
@@ -45,6 +47,7 @@ def Registro(request):
                 }
             )
             user.email_user(subject=asunto, message=mensaje)
+            return redirect('home')
         else:
             form = RegistroUsuario()
             return render(request, 'registro.html', {'form':form})
@@ -65,3 +68,103 @@ def Activacion_Cuenta(request, uidb64, token):
         return redirect('users')
     else:
         return render(request, 'Activacion_Cuenta_Invalida.html')
+
+def Admins(request):
+    return render(request, 'administrador/AdminPanel.html')
+
+def ListaUsers(request):
+
+    users = Usuario.objects.all().values()
+
+    template_name = 'administrador/Usuarios.html'
+    
+    contexto = {
+        'Object': users,
+    }
+
+    return render(request, template_name, contexto)
+
+def DeleteUsers(request, id):
+
+    instance = get_object_or_404(Usuario, UserID = id)
+    users = {'users': instance}
+
+    if request.method == 'GET':
+        return render(request, 'administrador/BorrarUser.html' ,users)
+    
+    elif request.method == 'POST':
+        instance.delete()
+        return redirect('AdminUsersList')
+
+def UpdateUser(request, id):
+    
+    instance = get_object_or_404(Usuario, UserID = id)
+
+    if request.method == 'POST':
+        
+        form = UserUpdateForm(request.POST, instance=instance)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('AdminUserList'))
+    else:
+        form = UserUpdateForm(instance=instance)
+
+    return render(request, 'administrador/UpdateUser.html', {'form': form})
+
+def ver_orders(request):
+    orders = Orders.objects.prefetch_related('Items__Item').all()
+
+    contexto = {
+        'Object': orders,
+    }
+
+    return render(request, 'administrador/ordersAdmin.html', contexto)
+
+def CrearPerfil(request):
+
+    if request.method == 'POST':
+        form = PerfilCreacionForm(request.POST)
+
+        if form.is_valid():
+            perfil = form.save(commit=False)
+            perfil.User = request.user
+            perfil.save()
+            return redirect('users')
+        else:
+            print(form.errors)
+            form = PerfilCreacionForm()
+
+    form = PerfilCreacionForm()
+    return render(request, 'perfil/PerfilForm.html', {'form':form})
+
+def verPerfil(request):
+    perfil = Perfil.objects.get(User=request.user)
+    contexto = {'perfil': perfil}
+    return render(request, 'perfil/perfil.html', contexto)
+
+def editarPerfil(request):
+
+    perfil = Perfil.objects.get(User=request.user)
+
+    if request.method == 'POST':
+
+        form = PerfilEditarForm(request.POST, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+        else:
+            print(form.errors)
+            form = PerfilEditarForm()
+    else:
+        form = PerfilEditarForm(instance=perfil)
+
+    return render(request, 'perfil/EditarPerfil.html', {'form':form}),
+
+def aboutus(request):
+    return render(request, 'informacion/aboutus.html')
+
+def contact(request):
+    return render (request, 'informacion/contact.html')
+    
+            

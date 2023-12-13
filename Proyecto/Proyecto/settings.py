@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +26,7 @@ SECRET_KEY = "django-insecure-$zfa5^6lafqgmja13_ndo%%3k(4s_ups9dl)wt%_08moubfjc7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -41,9 +40,7 @@ INSTALLED_APPS = [
     "Core",
     "users",
     "cart",
-    "pagos",
-    'crispy_forms',
-    'crispy_bootstrap4'
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -81,9 +78,13 @@ WSGI_APPLICATION = "Proyecto.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'reidiosolutionsDB',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -143,3 +144,17 @@ EMAIL_PORT = 587
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 LOGIN_REDIRECT_URL='home'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+PAYPAL_MODE = 'sandbox'
+PAYPAL_CLIENT_ID = 'AVG3zJOOJxQijsUEVVGqVdG_Cx4emRL6AnjTStbRaxBvSk9etUa5NxaoBTCmuFYIW2lx8lfttAB7xaLo'
+PAYPAL_CLIENT_SECRET = 'EI4yGMMvehpl0wyh2F0N25GiqL7TxvXkAR2wF71nypWtzRCk1iFVEe0lTkqLoRmX6EHmwPHA_Hjg3zjp'
+
+SESSION_COOKIE_AGE = 1209600
+
+LOGIN_URL = '/users/login/'

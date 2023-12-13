@@ -6,7 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    hola.
-    <a href="{% url 'registro' %}">registro</a>
+    {% if user.is_authenticated %}
+        {%if request.user.perfil %}
+            <a href="{% url 'perfil'  %}">perfil</a>
+        {%else%}
+            <a href="{% url 'CrearPerfil' %}">Crear Perfil</a>
+        {%endif%}
+    {%else%}
+        <a href="{% url 'login' %}">Login</a>
+    {%endif%}
 </body>
 </html>
